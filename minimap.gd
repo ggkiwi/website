@@ -10,7 +10,7 @@ func update_player_minimap() -> void:
 		for i : Vector2i in chosen_room: 
 			set_mini_map_cell(i)
 		
-		# Connectors Next
+		# Connectors Next (Connectors: tiles that connect Rooms to Paths) 
 		var chosen_arr : Array = player_resource.connector_array_rooms[current_room_index]
 		if not chosen_arr.is_empty(): # Connectors
 			for i : Vector2i in chosen_arr: 
