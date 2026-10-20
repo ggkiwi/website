@@ -13,7 +13,7 @@ func update_player_minimap() -> void:
 		# Connectors Next
 		var chosen_arr : Array = player_resource.connector_array_rooms[current_room_index]
 		if not chosen_arr.is_empty(): # Connectors
-			for i : Vector2i in player_resource.connector_array_rooms[current_room_index]: 
+			for i : Vector2i in chosen_arr: 
 				set_mini_map_cell(i)
 		
 	# 2 tile-away vision (fog of war)
