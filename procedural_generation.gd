@@ -5,7 +5,6 @@ func start_path() -> void:
 		for j : int in range(floor_margin_y, room_size.y - floor_margin_y):
 			var input_vec : Vector2i = Vector2i(i, j)
 			path_fill(input_vec)
-	print("PATH COMPLETE")
 
 enum Direction {LEFT, UP,  DOWN, RIGHT,}
 var acceptable_direction_array : Array = []
