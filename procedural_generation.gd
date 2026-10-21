@@ -62,6 +62,25 @@ func remove_dead_ends(input: Vector2i) -> void:
 	terraform(walls, [input], current_floor.biome, TileType.WALLS)
 	remove_dead_ends(check_next)
 
+var maze_walk_visited: Array = []
+var cell_floors : Array[Vector2i]
+func maze_walk_check() -> bool:
+	cell_floors = floors.get_used_cells()
+	
+	# Choose random starting location
+	var start : Vector2i = cell_floors[0]
+	
+	maze_walk_dfs(start)
+	var out: bool
+	if maze_walk_visited.size() == cell_floors.size(): 
+		out = true
+		print("Maze Solveable!")
+	else: 
+		out = false
+		print("ERROR: Maze Not Solveable")
+	
+	return out
+
 var ccw_direction : Array[Vector2i] = [Vector2i.LEFT, Vector2i.DOWN, Vector2i.RIGHT, Vector2i.UP]
 ## Maze Solver
 func maze_walk_dfs(input: Vector2i) -> void:
