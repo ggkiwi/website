@@ -14,7 +14,7 @@ func loop_prevented(input: Vector2i) -> bool:
 		if count >= 2: return false
 	return true
 
-# Flood Fill - Perfect Maze
+## Flood Fill - Perfect Maze
 func path_fill_v1(input_vec: Vector2i, prev_direction: Vector2i = Vector2i(0,0)) -> void:
 	# 1. Must be an empty tile
 	if floors.get_cell_tile_data(input_vec) != null: return
@@ -32,13 +32,12 @@ func path_fill_v1(input_vec: Vector2i, prev_direction: Vector2i = Vector2i(0,0))
 	
 	var manip_dir_arr: Array = Help.direction.duplicate()
 	
-	# No direction compilation, 35% check to go in the same direction
-	# also remove direction from the copied Help.direction array
-	if prev_direction != Vector2i(0,0) and Help.rng.randi_range(1,100) > 65:
+	# Has previous direction, 35% check to go in the same direction
+	if prev_direction != Vector2i(0,0) and Help.rng.randi_range(1,100) > 65: # maintain seed
 		manip_dir_arr.erase(prev_direction)
 		await path_fill_v1(input_vec + prev_direction, prev_direction)
 	
 	for i : int in manip_dir_arr.size():
-		var chosen_dir: Vector2i = Help.pick_random(manip_dir_arr)
+		var chosen_dir: Vector2i = Help.pick_random(manip_dir_arr) # maintain seed
 		manip_dir_arr.erase(chosen_dir)
 		await path_fill_v1(input_vec + chosen_dir, chosen_dir)
