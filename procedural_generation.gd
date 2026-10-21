@@ -4,7 +4,7 @@ func start_path() -> void:
 	for i : int in range(floor_margin_x, room_size.x - floor_margin_x):
 		for j : int in range(floor_margin_y, room_size.y - floor_margin_y):
 			var input_vec : Vector2i = Vector2i(i, j)
-			path_fill(input_vec)
+			path_fill_v1(input_vec)
 
 func loop_prevented(input: Vector2i) -> bool:
 	var count: int = 0
