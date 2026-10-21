@@ -41,3 +41,23 @@ func path_fill_v1(input_vec: Vector2i, prev_direction: Vector2i = Vector2i(0,0))
 		var chosen_dir: Vector2i = Help.pick_random(manip_dir_arr) # maintain seed
 		manip_dir_arr.erase(chosen_dir)
 		path_fill_v1(input_vec + chosen_dir, chosen_dir)
+
+## Trim Dead Ends
+func remove_dead_ends(input: Vector2i) -> void:
+	var current_floor_arr: Array = floors.get_used_cells()
+	
+	# Check if input is no longer is a floor tile (trimmed via DFS)
+	if not current_floor_arr.has(input): return
+	
+	var exits: int = 0
+	var check_next: Vector2i = input
+	
+	for i : Vector2i in Help.direction:
+		if current_floor_arr.has(input + i):
+			exits += 1
+			if exits > 1: return
+			
+			check_next += i
+	
+	terraform(walls, [input], current_floor.biome, TileType.WALLS)
+	remove_dead_ends(check_next)
