@@ -5,9 +5,7 @@ func start_path() -> void:
 	for i : int in range(floor_margin_x, room_size.x - floor_margin_x):
 		for j : int in range(floor_margin_y, room_size.y - floor_margin_y):
 			var input_vec : Vector2i = Vector2i(i, j)
-			print("waiting...")
-			print(i, j)
-			await path_fill(input_vec)
+			path_fill(input_vec)
 	print("PATH COMPLETE")
 enum Direction {LEFT, UP,  DOWN, RIGHT,}
 var acceptable_direction_array : Array = []
@@ -27,20 +25,13 @@ func path_fill(input_vec: Vector2i) -> void:
 	var prev_direction: int = -1
 	
 	# 1. Must be an empty tile
-	if floors.get_cell_tile_data(input_vec) != null: 
-		await get_tree().physics_frame
-		return
-	if not loop_prevented(input_vec):
-		await get_tree().physics_frame
-		return
+	if floors.get_cell_tile_data(input_vec) != null: return
+	if not loop_prevented(input_vec): return
 	# 2. Must not be bordering a room
-	if border_array.has(input_vec): 
-		await get_tree().physics_frame
-		return
+	if border_array.has(input_vec): return
 	# 3. No 4 tile corners
-	if not advanced_corner_check(input_vec, true): 
-		await get_tree().physics_frame
-		return
+	if not advanced_corner_check(input_vec, true): return
+	
 	
 	# Start Point
 	terraform(floors, [input_vec], current_floor.biome, TileType.FLOOR)
