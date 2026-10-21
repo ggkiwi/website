@@ -1,12 +1,25 @@
+
 ## Path Iterator
 func start_path() -> void:
+	#var index: int = 0
 	for i : int in range(floor_margin_x, room_size.x - floor_margin_x):
 		for j : int in range(floor_margin_y, room_size.y - floor_margin_y):
 			var input_vec : Vector2i = Vector2i(i, j)
-			path_fill(input_vec)
-
-enum Direction {LEFT, UP, RIGHT, DOWN}
+			print("waiting...")
+			print(i, j)
+			await path_fill(input_vec)
+	print("PATH COMPLETE")
+enum Direction {LEFT, UP,  DOWN, RIGHT,}
 var acceptable_direction_array : Array = []
+
+func loop_prevented(input: Vector2i) -> bool:
+	var count: int = 0
+	# Check 4 directions, if count 2 is found return false
+	for i : Vector2i in Help.direction:
+		if floors.get_cell_tile_data(input + i) != null: count += 1
+		if count >= 2: return false
+	
+	return true
 
 ## Flood Fill - Perfect Maze
 func path_fill(input_vec: Vector2i) -> void:
@@ -14,20 +27,29 @@ func path_fill(input_vec: Vector2i) -> void:
 	var prev_direction: int = -1
 	
 	# 1. Must be an empty tile
-	if floors.get_cell_tile_data(input_vec) != null: return
+	if floors.get_cell_tile_data(input_vec) != null: 
+		await get_tree().physics_frame
+		return
+	if not loop_prevented(input_vec):
+		await get_tree().physics_frame
+		return
 	# 2. Must not be bordering a room
-	if border_array.has(input_vec): return
+	if border_array.has(input_vec): 
+		await get_tree().physics_frame
+		return
 	# 3. No 4 tile corners
-	if not advanced_corner_check(input_vec, true): return
+	if not advanced_corner_check(input_vec, true): 
+		await get_tree().physics_frame
+		return
 	
 	# Start Point
 	terraform(floors, [input_vec], current_floor.biome, TileType.FLOOR)
 	path_array.append(input_vec)
 	
-	
 	# Path Iteration
 	# Start from bottom of the stack
 	while not path_array.is_empty():
+		if not anim_speed == 6.0: await get_tree().create_timer(0.1/(anim_speed * 2)).timeout
 		acceptable_direction_array = []
 		var chosen_vec: Vector2i = path_array[-1]
 		
@@ -55,6 +77,7 @@ func path_fill(input_vec: Vector2i) -> void:
 			Direction.UP: chosen_vec = chosen_vec + Vector2i.UP
 			Direction.RIGHT: chosen_vec = chosen_vec + Vector2i.RIGHT
 			Direction.DOWN: chosen_vec = chosen_vec + Vector2i.DOWN
+		
 		
 		terraform(floors, [chosen_vec], current_floor.biome, TileType.FLOOR)
 		path_array.append(chosen_vec)
