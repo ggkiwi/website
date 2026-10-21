@@ -31,7 +31,6 @@ func path_fill(input_vec: Vector2i) -> void:
 	# 3. No 4 tile corners
 	if not advanced_corner_check(input_vec, true): return
 	
-	
 	# Start Point
 	terraform(floors, [input_vec], current_floor.biome, TileType.FLOOR)
 	path_array.append(input_vec)
@@ -39,7 +38,6 @@ func path_fill(input_vec: Vector2i) -> void:
 	# Path Iteration
 	# Start from bottom of the stack
 	while not path_array.is_empty():
-		if not anim_speed == 6.0: await get_tree().create_timer(0.1/(anim_speed * 2)).timeout
 		acceptable_direction_array = []
 		var chosen_vec: Vector2i = path_array[-1]
 		
