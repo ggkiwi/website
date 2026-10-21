@@ -7,6 +7,7 @@ func start_path() -> void:
 			var input_vec : Vector2i = Vector2i(i, j)
 			path_fill(input_vec)
 	print("PATH COMPLETE")
+
 enum Direction {LEFT, UP,  DOWN, RIGHT,}
 var acceptable_direction_array : Array = []
 
@@ -16,7 +17,6 @@ func loop_prevented(input: Vector2i) -> bool:
 	for i : Vector2i in Help.direction:
 		if floors.get_cell_tile_data(input + i) != null: count += 1
 		if count >= 2: return false
-	
 	return true
 
 ## Flood Fill - Perfect Maze
