@@ -66,8 +66,7 @@ var ccw_direction : Array[Vector2i] = [Vector2i.LEFT, Vector2i.DOWN, Vector2i.RI
 ## Maze Solver
 func maze_walk_dfs(input: Vector2i) -> void:
 	for i : Vector2i in ccw_direction:
-		if maze_walk_visited.size() == cell_floors.size(): break
-		if not anim_speed == 6.0: await get_tree().create_timer(0.05/(anim_speed * 2)).timeout
+		if maze_walk_visited.size() == cell_floors.size(): return
 		if not maze_walk_visited.has(input + i) and cell_floors.has(input + i):
 			maze_walk_visited.append(input + i)
 			tile_dev_margin.set_cell(input + i, 0, Vector2i(0,1), 0)
