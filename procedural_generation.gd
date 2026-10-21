@@ -1,7 +1,6 @@
 
 ## Path Iterator
 func start_path() -> void:
-	#var index: int = 0
 	for i : int in range(floor_margin_x, room_size.x - floor_margin_x):
 		for j : int in range(floor_margin_y, room_size.y - floor_margin_y):
 			var input_vec : Vector2i = Vector2i(i, j)
