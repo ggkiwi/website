@@ -17,56 +17,32 @@ func loop_prevented(input: Vector2i) -> bool:
 		if count >= 2: return false
 	return true
 
-## Flood Fill - Perfect Maze
-func path_fill(input_vec: Vector2i) -> void:
-	var path_array: Array = []
-	var prev_direction: int = -1
-	
+# Flood Fill - Perfect Maze
+func path_fill_v1(input_vec: Vector2i, prev_direction: Vector2i = Vector2i(0,0)) -> void:
 	# 1. Must be an empty tile
 	if floors.get_cell_tile_data(input_vec) != null: return
+	# 2. Checks 4 spots to prevent loops
 	if not loop_prevented(input_vec): return
-	# 2. Must not be bordering a room
+	# 3. Must not be bordering a room
 	if border_array.has(input_vec): return
-	# 3. No 4 tile corners
+	# 4. No 4 tile corners
 	if not advanced_corner_check(input_vec, true): return
+	# 5. Not out of bounds
+	if margin_helper_array.has(input_vec): return
 	
 	# Start Point
+	if not anim_speed == 6.0: await get_tree().create_timer(0.1/(anim_speed * 2)).timeout
 	terraform(floors, [input_vec], current_floor.biome, TileType.FLOOR)
-	path_array.append(input_vec)
 	
-	# Path Iteration
-	# Start from bottom of the stack
-	while not path_array.is_empty():
-		acceptable_direction_array = []
-		var chosen_vec: Vector2i = path_array[-1]
-		
-		# Compile Available directions
-		for i : int in Direction.values():
-			direction_check(chosen_vec, i)
-		
-		# No directions available, go to next iteration 
-		if acceptable_direction_array.is_empty():
-			path_array.pop_back()
-			continue # Goes to next while iteration
-		
-		# No previous direction, randomize direction
-		if prev_direction == -1:
-			prev_direction = Help.pick_random(acceptable_direction_array)
-		else:
-			var chance_roll : int = Help.rng.randi_range(1,100)
-			if acceptable_direction_array.has(prev_direction) and chance_roll > 65: # from 40 to 50 changes a bunch (unsolvable at 50?
-				pass # Continues to stay as previous direction
-			else:
-				prev_direction = Help.pick_random(acceptable_direction_array)
-		
-		match prev_direction:
-			Direction.LEFT: chosen_vec = chosen_vec + Vector2i.LEFT
-			Direction.UP: chosen_vec = chosen_vec + Vector2i.UP
-			Direction.RIGHT: chosen_vec = chosen_vec + Vector2i.RIGHT
-			Direction.DOWN: chosen_vec = chosen_vec + Vector2i.DOWN
-		
-		
-		terraform(floors, [chosen_vec], current_floor.biome, TileType.FLOOR)
-		path_array.append(chosen_vec)
+	var manip_dir_arr: Array = Help.direction.duplicate()
 	
-	cell_walls = walls.get_used_cells()
+	# No direction compilation, 35% check to go in the same direction
+	# also remove direction from the copied Help.direction array
+	if prev_direction != Vector2i(0,0) and Help.rng.randi_range(1,100) > 65:
+		manip_dir_arr.erase(prev_direction)
+		await path_fill_v1(input_vec + prev_direction, prev_direction)
+	
+	for i : int in manip_dir_arr.size():
+		var chosen_dir: Vector2i = Help.pick_random(manip_dir_arr)
+		manip_dir_arr.erase(chosen_dir)
+		await path_fill_v1(input_vec + chosen_dir, chosen_dir)
