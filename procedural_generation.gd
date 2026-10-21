@@ -46,7 +46,7 @@ func path_fill_v1(input_vec: Vector2i, prev_direction: Vector2i = Vector2i(0,0))
 func remove_dead_ends(input: Vector2i) -> void:
 	var current_floor_arr: Array = floors.get_used_cells()
 	
-	# Check if input is no longer is a floor tile (trimmed via DFS)
+	# Check if input is no longer a floor tile (trimmed via DFS)
 	if not current_floor_arr.has(input): return
 	
 	var exits: int = 0
