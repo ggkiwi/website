@@ -6,9 +6,6 @@ func start_path() -> void:
 			var input_vec : Vector2i = Vector2i(i, j)
 			path_fill(input_vec)
 
-enum Direction {LEFT, UP,  DOWN, RIGHT,}
-var acceptable_direction_array : Array = []
-
 func loop_prevented(input: Vector2i) -> bool:
 	var count: int = 0
 	# Check 4 directions, if count 2 is found return false
@@ -31,7 +28,6 @@ func path_fill_v1(input_vec: Vector2i, prev_direction: Vector2i = Vector2i(0,0))
 	if margin_helper_array.has(input_vec): return
 	
 	# Start Point
-	if not anim_speed == 6.0: await get_tree().create_timer(0.1/(anim_speed * 2)).timeout
 	terraform(floors, [input_vec], current_floor.biome, TileType.FLOOR)
 	
 	var manip_dir_arr: Array = Help.direction.duplicate()
