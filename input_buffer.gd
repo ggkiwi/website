@@ -11,10 +11,11 @@ func _physics_process(_delta: float) -> void:
 	if player_resource.next_floor_screen_open: return
 	if not player_resource.ready_to_move: return
 	
-	# Buffered Keys
+	# Buffered Key Check
 	for action : StringName in valid_buffer_actions:
 		if Input.is_action_pressed(action): buffer_push(action)
 	
+	# Buffer Action within window
 	if not buffer.is_empty():
 		if Time.get_ticks_msec() - buffer.values()[0] >  valid_buffer_time:
 			buffer.clear()
@@ -24,3 +25,7 @@ func _physics_process(_delta: float) -> void:
 		
 		if buffer.keys()[0] == "attack": attack(facing_direction)
 		else: single_move_check(Help.move_input_dict[buffer.keys()[0]])
+
+func buffer_push(input: String) -> void:
+	if not buffer.has(input): buffer.clear()
+	buffer[input] = Time.get_ticks_msec()
