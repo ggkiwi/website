@@ -32,7 +32,7 @@ func path_fill_v1(input_vec: Vector2i, prev_direction: Vector2i = Vector2i(0,0))
 	
 	var manip_dir_arr: Array = Help.direction.duplicate() # [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]
 	
-	# Has previous direction, slight prefer going in the same direction
+	# Has previous direction, slight prefer (35%) going in the same direction
 	if prev_direction != Vector2i(0,0) and Help.rng.randi_range(1,100) > 65: # maintain seed
 		manip_dir_arr.erase(prev_direction)
 		path_fill_v1(input_vec + prev_direction, prev_direction)
